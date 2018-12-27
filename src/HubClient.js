@@ -24,6 +24,7 @@ export default class HubClient extends Client {
    * @constructor
    */
   constructor(options) {
+    console.log('HubClient options', options);
     super(options);
     this._config = Object.assign({}, CLIENT_CONFIG_DEFAULTS, HUB_CLIENT_CONFIG_DEFAULTS, options || {});
     // Object to store hub proxies for this connection
@@ -50,7 +51,7 @@ export default class HubClient extends Client {
           if(func) {
             const arrrrgs = Array.prototype.join(...data.Args, ', ');
             this._logger.info(`Invoking \`${data.Method}(${arrrrgs})\`. `);
-            func(data.State, ...data.Args);
+            func.apply(data.State, data.Args);
           } else {
             this._logger.warn(`Client function not found for method \`${data.Method}\` on hub \`${data.Hub}\`.`);
           }
@@ -104,6 +105,9 @@ export default class HubClient extends Client {
     return request
       .get(`${this._config.url}/negotiate`)
       .query({clientProtocol: CLIENT_PROTOCOL_VERSION})
+      .query({HubUrl: this._config.HubUrl})
+      .query({DomainId: this._config.DomainId })
+      .query({IsMobile: this._config.IsMobile})
       .query({connectionData: JSON.stringify(this.connectionData)})
       .use(PromiseMaker)
       .promise();

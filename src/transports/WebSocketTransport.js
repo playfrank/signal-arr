@@ -57,7 +57,7 @@ export default class WebSocketTransport extends Transport {
       }
 
       this._logger.info(`*${this.constructor.name}* starting...`);
-      let url = this._url.replace(/http(s)?:/, 'ws:');
+      let url = this._url.replace(/http(s)?:/, 'wss:');
       this._logger.info(`Connecting to ${url}`);
 
       if(!this._intentionallyClosed && this.state === CONNECTION_STATES.reconnecting) {
@@ -68,6 +68,16 @@ export default class WebSocketTransport extends Transport {
         this.emit(CONNECTION_EVENTS.connecting);
         this.state = CONNECTION_STATES.connecting;
       }
+
+      if(this._client._config.HubUrl) {
+        url += '&HubUrl='+encodeURIComponent(this._client._config.HubUrl);
+      }
+      if(this._client._config.DomainId) {
+        url += '&DomainId='+this._client._config.DomainId;
+      }
+      url += '&IsMobile='+this._client._config.IsMobile;
+
+
       if(this._client.connectionData) {
         url += `&connectionData=${JSON.stringify(this._client.connectionData)}`;
       }
