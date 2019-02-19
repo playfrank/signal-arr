@@ -109,7 +109,7 @@ export default class WebSocketTransport extends Transport {
         } else {
           this._logger.info(`*${this.constructor.name}* connection closed unexpectedly... Attempting to reconnect.`);
           this.state = CONNECTION_STATES.reconnecting;
-          this._reconnectTimeoutId = setTimeout(this.start(), this._reconnectWindow);
+          this._reconnectTimeoutId = setTimeout(this.start, this._reconnectWindow);
         }
       };
     });
