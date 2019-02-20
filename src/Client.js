@@ -32,11 +32,12 @@ export default class Client extends EventEmitter {
     super();
     this._config = Object.assign({}, CLIENT_CONFIG_DEFAULTS, options || {});
     this._logger = this._config.logger;
-    this._logger.state.isEnabled = this._config.logging;
     this.state = CLIENT_STATES.stopped;
     this._connectingMessageBuffer = new ConnectingMessageBuffer(this, this.emit.bind(this, CLIENT_EVENTS.received));
     this.connectionData = [];
 
+    //Disable the logging if needed
+    Logdown.disable(this._config.logging ? 'SignalR Client' : '');
   }
 
   /**
