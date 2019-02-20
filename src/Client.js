@@ -37,7 +37,7 @@ export default class Client extends EventEmitter {
     this.connectionData = [];
 
     //Disable the logging if needed
-    Logdown.disable(this._config.logging ? 'SignalR Client' : '');
+    Logdown.disable(this._config.logging ? '' : '*');
   }
 
   /**
